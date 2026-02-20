@@ -1,0 +1,22 @@
+# deps
+node_modules/
+
+# env
+.env
+**/.env
+.env.* 
+!.env.example
+
+# local test payloads / creds
+login.json
+product.json
+ge_with_empty_slug.json
+cookies.txt
+
+# uploads
+Techspire-API/uploads/
+uploads/
+
+# build artifacts
+dist/
+Techspire/dist/
