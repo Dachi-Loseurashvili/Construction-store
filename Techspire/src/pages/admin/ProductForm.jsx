@@ -12,15 +12,31 @@ const ProductForm = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState('');
+  const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({
     name: '',
     price: '',
     category: '',
+    categoryId: '',
+    brand: '',
     image: '',
     description: '',
     stock: '10',
   });
+
+  // Fetch categories on mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await API.get('/api/categories');
+        setCategories(res.data);
+      } catch (err) {
+        console.error('Failed to load categories');
+      }
+    };
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     if (isEdit) {
@@ -33,6 +49,8 @@ const ProductForm = () => {
             name: p.name || '',
             price: String(p.price || ''),
             category: p.category || '',
+            categoryId: p.categoryId || '',
+            brand: p.brand || '',
             image: p.image || '',
             description: p.description || '',
             stock: String(p.stock || '10'),
@@ -46,6 +64,10 @@ const ProductForm = () => {
       fetchProduct();
     }
   }, [id, isEdit]);
+
+  // Organize categories: main categories and their subcategories
+  const mainCategories = categories.filter(c => !c.parentId);
+  const getSubcategories = (parentId) => categories.filter(c => c.parentId === parentId);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -82,6 +104,8 @@ const ProductForm = () => {
       name: formData.name,
       price: Number(formData.price),
       category: formData.category,
+      categoryId: formData.categoryId || null,
+      brand: formData.brand,
       image: formData.image,
       description: formData.description,
       stock: Number(formData.stock),
@@ -116,11 +140,11 @@ const ProductForm = () => {
           to="/admin/products"
           className="inline-flex items-center text-sm text-gray-500 hover:text-black mb-6"
         >
-          <ChevronLeft className="mr-1 h-4 w-4" /> Back to Products
+          <ChevronLeft className="mr-1 h-4 w-4" /> პროდუქტებზე დაბრუნება
         </Link>
 
         <h1 className="text-3xl font-bold mb-8">
-          {isEdit ? 'Edit Product' : 'New Product'}
+          {isEdit ? 'პროდუქტის რედაქტირება' : 'ახალი პროდუქტი'}
         </h1>
 
         {error && (
@@ -131,7 +155,7 @@ const ProductForm = () => {
 
         <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">დასახელება</label>
             <input
               type="text"
               name="name"
@@ -144,7 +168,7 @@ const ProductForm = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">ფასი (₾)</label>
               <input
                 type="number"
                 name="price"
@@ -157,7 +181,7 @@ const ProductForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">მარაგი</label>
               <input
                 type="number"
                 name="stock"
@@ -170,25 +194,43 @@ const ProductForm = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">კატეგორია</label>
             <select
-              name="category"
-              value={formData.category}
+              name="categoryId"
+              value={formData.categoryId}
               onChange={handleChange}
-              required
               className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
             >
-              <option value="">Select category</option>
-              <option value="Workstations">Workstations</option>
-              <option value="Accessories">Accessories</option>
-              <option value="Displays">Displays</option>
-              <option value="Tools">Tools</option>
-              <option value="Furniture">Furniture</option>
+              <option value="">აირჩიეთ კატეგორია</option>
+              {mainCategories.map((main) => (
+                <optgroup key={main._id} label={main.name}>
+                  {getSubcategories(main._id).map((sub) => (
+                    <option key={sub._id} value={sub._id}>
+                      {main.name} / {sub.name}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
             </select>
+            <p className="mt-1 text-xs text-gray-400">
+              <Link to="/admin/categories" className="underline hover:text-black">კატეგორიების მართვა</Link>
+            </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">ბრენდი</label>
+            <input
+              type="text"
+              name="brand"
+              value={formData.brand}
+              onChange={handleChange}
+              placeholder="მაგ: Bosch, Makita"
+              className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">სურათი</label>
             <div className="flex gap-2 mb-2">
               <label className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 text-sm">
                 {isUploading ? (
@@ -196,7 +238,7 @@ const ProductForm = () => {
                 ) : (
                   <Upload className="h-4 w-4" />
                 )}
-                {isUploading ? 'Uploading...' : 'Upload Image'}
+                {isUploading ? 'იტვირთება...' : 'სურათის ატვირთვა'}
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
@@ -205,7 +247,7 @@ const ProductForm = () => {
                   className="hidden"
                 />
               </label>
-              <span className="text-sm text-gray-400 self-center">or enter URL below</span>
+              <span className="text-sm text-gray-400 self-center">ან ჩასვით ბმული ქვემოთ</span>
             </div>
             <input
               type="text"
@@ -213,7 +255,7 @@ const ProductForm = () => {
               value={formData.image}
               onChange={handleChange}
               required
-              placeholder="/uploads/... or https://..."
+              placeholder="/uploads/... ან https://..."
               className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
             />
             {formData.image && (
@@ -226,7 +268,7 @@ const ProductForm = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">აღწერა</label>
             <textarea
               name="description"
               value={formData.description}
@@ -247,7 +289,7 @@ const ProductForm = () => {
             ) : (
               <>
                 <Save className="h-4 w-4" />
-                {isEdit ? 'Update Product' : 'Create Product'}
+                {isEdit ? 'პროდუქტის განახლება' : 'პროდუქტის შექმნა'}
               </>
             )}
           </button>

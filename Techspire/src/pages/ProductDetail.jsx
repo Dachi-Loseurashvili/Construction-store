@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ShoppingBag, ChevronLeft, ShieldCheck, Truck, Loader2 } from 'lucide-react';
+import { ChevronLeft, Loader2 } from 'lucide-react';
 import API from '../api/axios';
-import { useCart } from '../hooks/useCart';
+import PurchaseCTA from '../components/PurchaseCTA';
 
 const ProductDetail = () => {
   const { slug } = useParams();
-  const { addToCart } = useCart();
-  const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,12 +24,6 @@ const ProductDetail = () => {
     fetchProduct();
   }, [slug]);
 
-  const handleAddToCart = () => {
-    if (product) {
-      addToCart(product, quantity);
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-24 sm:py-48">
@@ -49,7 +41,7 @@ const ProductDetail = () => {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         
         <Link to="/shop" className="inline-flex items-center text-sm text-gray-500 hover:text-black mb-6 sm:mb-8">
-          <ChevronLeft className="mr-1 h-4 w-4" /> Back to Shop
+          <ChevronLeft className="mr-1 h-4 w-4" /> მაღაზიაში დაბრუნება
         </Link>
 
         {/* 2. Responsive Grid: stack on mobile, side-by-side on lg screens */}
@@ -74,7 +66,7 @@ const ProductDetail = () => {
               {product.category}
             </p>
             <p className="mt-4 text-2xl sm:text-3xl font-black text-black">
-              ${product.price}
+              ₾{product.price}
             </p>
             
             <p className="mt-6 sm:mt-8 text-sm sm:text-base text-gray-600 leading-relaxed">
@@ -97,42 +89,9 @@ const ProductDetail = () => {
               </div>
             )}
 
-            {/* 4. Controls: Flex-col on small screens, row on medium+ */}
-            <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-              <div className="flex w-full sm:w-auto items-center justify-between border border-gray-200 rounded-full px-6 py-3">
-                <button 
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))} 
-                  className="text-2xl hover:text-gray-500 transition-colors leading-none"
-                >
-                  -
-                </button>
-                <span className="font-bold w-12 text-center text-lg">{quantity}</span>
-                <button 
-                  onClick={() => setQuantity(quantity + 1)} 
-                  className="text-2xl hover:text-gray-500 transition-colors leading-none"
-                >
-                  +
-                </button>
-              </div>
-              
-              <button 
-                onClick={handleAddToCart}
-                className="w-full sm:grow flex items-center justify-center rounded-full bg-black py-4 text-white font-bold hover:bg-gray-800 transition-all active:scale-95 shadow-lg"
-              >
-                Add to Cart <ShoppingBag className="ml-2 h-5 w-5" />
-              </button>
-            </div>
-
-            {/* Logistics Info: Stacked items */}
-            <div className="mt-8 space-y-4">
-              <div className="flex items-start text-sm text-gray-500">
-                <Truck className="mr-3 h-5 w-5 flex-shrink-0 text-black" />
-                <span>Free express shipping for Techspire orders</span>
-              </div>
-              <div className="flex items-start text-sm text-gray-500">
-                <ShieldCheck className="mr-3 h-5 w-5 flex-shrink-0 text-black" />
-                <span>2-Year limited warranty included</span>
-              </div>
+            {/* Purchase CTA */}
+            <div className="mt-10">
+              <PurchaseCTA />
             </div>
           </div>
         </div>

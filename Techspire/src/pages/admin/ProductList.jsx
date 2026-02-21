@@ -5,14 +5,19 @@ import API from '../../api/axios';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const fetchProducts = async () => {
+  const fetchData = async () => {
     try {
       setIsLoading(true);
-      const response = await API.get('/api/products');
-      setProducts(response.data);
+      const [prodRes, catRes] = await Promise.all([
+        API.get('/api/products'),
+        API.get('/api/categories')
+      ]);
+      setProducts(prodRes.data);
+      setCategories(catRes.data);
     } catch {
       setError('Failed to load products');
     } finally {
@@ -21,8 +26,22 @@ const ProductList = () => {
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchData();
   }, []);
+
+  // Build categoryById map for display
+  const categoryById = {};
+  categories.forEach(c => { categoryById[c._id] = c; });
+
+  const getCategoryLabel = (product) => {
+    const cat = categoryById[product.categoryId];
+    if (!cat) return product.category || '—';
+    if (cat.parentId) {
+      const parent = categoryById[cat.parentId];
+      return parent ? `${parent.name} / ${cat.name}` : cat.name;
+    }
+    return cat.name;
+  };
 
   const handleDelete = async (id, name) => {
     if (!window.confirm(`Delete "${name}"?`)) return;
@@ -90,8 +109,8 @@ const ProductList = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-600">{product.category}</td>
-                    <td className="px-4 py-3 text-sm font-medium">${product.price}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{getCategoryLabel(product)}</td>
+                    <td className="px-4 py-3 text-sm font-medium">₾{product.price}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{product.stock}</td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">

@@ -1,31 +1,45 @@
-import React, { useState } from 'react'; 
+import React, { useState, useEffect } from 'react'; 
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
-  ShoppingCart, 
   User, 
   Search, 
   Menu, 
   X, 
   ChevronDown, 
   LogOut, 
-  LayoutDashboard,
-  History
+  LayoutDashboard
 } from 'lucide-react';
-import { useCart } from '../hooks/useCart';
 import { useUser } from '../hooks/useUser';
-import CartDrawer from './CartDrawer';
+import API from '../api/axios';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // --- CART HOOK ---
-  const { cartCount } = useCart(); 
-
   // --- AUTH FROM CONTEXT ---
   const { user, logout, isAdmin } = useUser();
+
+  // Fetch categories for dropdown
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await API.get('/api/categories');
+        setCategories(res.data);
+      } catch (err) {
+        console.error('Failed to load categories');
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  // Filter main categories: no parentId, exclude legacy, sort by createdAt desc, limit 7
+  const mainCategories = categories
+    .filter(c => !c.parentId)
+    .filter(c => c.slug !== 'legacy' && c.sortOrder !== 9999 && c.name !== 'Legacy')
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 7);
 
   const handleLogout = async () => {
     await logout();
@@ -55,27 +69,33 @@ const Navbar = () => {
             
             {/* Logo */}
             <Link to="/" className="text-2xl font-black tracking-tighter text-black italic">
-              TECHSPIRE
+              Housestrong
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-baseline space-x-8">
-              <Link to="/shop" className="text-sm font-bold text-gray-700 hover:text-black uppercase tracking-tight">Shop</Link>
+              <Link to="/shop" className="text-sm font-bold text-gray-700 hover:text-black uppercase tracking-tight">მაღაზია</Link>
               
               <div className="group relative">
                 <button className="flex items-center text-sm font-bold text-gray-700 hover:text-black uppercase tracking-tight">
-                  Categories <ChevronDown className="ml-1 h-4 w-4" />
+                  კატეგორიები <ChevronDown className="ml-1 h-4 w-4" />
                 </button>
                 <div className="absolute left-0 hidden w-48 pt-4 group-hover:block">
                   <div className="rounded-xl border border-gray-100 bg-white shadow-xl py-2">
-                    <Link to="/shop?category=Workstations" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Workstations</Link>
-                    <Link to="/shop?category=Accessories" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Accessories</Link>
-                    <Link to="/shop?category=Tools" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Tools</Link>
+                    {mainCategories.map((cat) => (
+                      <Link
+                        key={cat._id}
+                        to={`/shop?categoryId=${cat._id}`}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        {cat.name}
+                      </Link>
+                    ))}
                   </div>
                 </div>
               </div>
               
-              <Link to="/support" className="text-sm font-bold text-gray-700 hover:text-black uppercase tracking-tight">Support</Link>
+              <Link to="/support" className="text-sm font-bold text-gray-700 hover:text-black uppercase tracking-tight">ინფორმაცია</Link>
             </div>
 
             {/* Icons & Actions */}
@@ -86,7 +106,7 @@ const Navbar = () => {
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="მოძებნეთ პროდუქტი..."
                   value={searchValue}
                   onChange={handleSearch}
                   className="h-9 w-48 xl:w-64 rounded-full border border-gray-200 bg-gray-50 pl-10 pr-4 text-sm focus:border-black focus:outline-none transition-all"
@@ -105,13 +125,6 @@ const Navbar = () => {
                       <LayoutDashboard className="h-5 w-5" />
                     </Link>
                   )}
-                  <Link 
-                    to="/my-orders" 
-                    className="p-2 text-gray-600 hover:text-black transition-colors"
-                    title="Order History"
-                  >
-                    <History className="h-5 w-5" />
-                  </Link>
                   <Link to="/profile" className="hidden lg:flex items-center space-x-2 rounded-full bg-gray-50 px-3 py-1.5 border border-gray-100 hover:border-black transition-all">
                     <User className="h-4 w-4 text-gray-500" />
                     <span className="text-xs font-black text-black uppercase tracking-tighter">
@@ -127,19 +140,6 @@ const Navbar = () => {
                   <User className="h-5 w-5" />
                 </Link>
               )}
-
-              {/* Shopping Cart Trigger */}
-              <button 
-                onClick={() => setIsCartOpen(true)} 
-                className="relative p-2 text-gray-600 hover:text-black transition-colors cursor-pointer"
-              >
-                <ShoppingCart className="h-5 w-5" />
-                {cartCount > 0 && (
-                  <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] font-bold text-white shadow-sm">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
 
               {/* Mobile Menu Toggle */}
               <button onClick={() => setIsOpen(!isOpen)} className="p-2 md:hidden text-gray-600">
@@ -159,9 +159,6 @@ const Navbar = () => {
                     <User className="mr-2 h-5 w-5 text-gray-400" /> Hello, {user.fullName.split(' ')[0]}
                   </div>
                 </Link>
-                <Link to="/my-orders" onClick={closeMenu} className="flex items-center px-3 py-4 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                  <History className="mr-2 h-5 w-5 text-gray-400" /> Order History
-                </Link>
               </>
             )}
             <Link to="/shop" onClick={closeMenu} className="block px-3 py-3 text-base font-bold text-gray-700 hover:bg-gray-50 uppercase">Shop</Link>
@@ -169,9 +166,6 @@ const Navbar = () => {
           </div>
         )}
       </nav>
-
-      {/* Cart Drawer Component */}
-      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 };
