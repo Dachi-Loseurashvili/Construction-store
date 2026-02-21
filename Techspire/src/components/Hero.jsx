@@ -15,19 +15,18 @@ const Hero = () => {
           <div className="space-y-8 text-center md:text-left">
             <div className="inline-flex items-center rounded-full bg-black px-3 py-1 text-sm font-medium text-white">
               <Sparkles className="mr-2 h-4 w-4 text-yellow-400" />
-              <span>New Tech Collection Just Dropped</span>
+              <span>ახალი პროდუქტი მაღაზიაში</span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-black leading-[1.1]">
-              Elevate Your <br />
+              გააუმჯობესე ხარისხი <br />
               <span className="text-gray-400 font-medium italic">
-                Digital Workspace.
+                ჩვენთან ერთად
               </span>
             </h1>
 
             <p className="max-w-xl text-lg text-gray-600">
-              Premium hardware and custom-assembled setups designed for network
-              engineers. Built by experts, for experts.
+              მაღალი ხარისხის ევროპული სამშენებლო პროდუქტი
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start">
@@ -35,16 +34,11 @@ const Hero = () => {
                 to="/shop"
                 className="flex items-center justify-center rounded-full bg-black px-8 py-4 text-white font-semibold hover:bg-gray-800 transition-all group w-full sm:w-auto"
               >
-                Shop Now
+                მაღაზია
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
 
-              <Link
-                to="/gallery"
-                className="flex items-center justify-center rounded-full border border-gray-200 px-8 py-4 text-black font-semibold hover:bg-gray-50 transition-all w-full sm:w-auto"
-              >
-                View Gallery
-              </Link>
+              
             </div>
           </div>
 
@@ -52,7 +46,7 @@ const Hero = () => {
           <div className="relative">
             <div className="aspect-square rounded-2xl bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-100 shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&q=80&w=800"
+                src="https://imgs.search.brave.com/YtWlEQtxvGJ44Ox27O1GbaKHENqcM_hYY5Q_1t3tVxA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzAwL2Rl/LzQ0LzAwZGU0NGZm/MzdkNjhhM2VmMTY3/MjBmNWYzZWM2MGIw/LmpwZw"
                 alt="Tech Product"
                 className="object-cover w-full h-full hover:scale-105 transition-transform duration-500"
               />
@@ -61,10 +55,10 @@ const Hero = () => {
             {/* Floating Badge */}
             <div className="absolute -bottom-6 -left-6 rounded-xl bg-white p-6 shadow-xl border border-gray-50 hidden lg:block">
               <p className="text-sm font-bold text-black uppercase tracking-wider">
-                Trusted by
+                ნდობა
               </p>
               <p className="text-2xl font-black text-gray-400">
-                10k+ Engineers
+                უამრავი მომხმარებლისაგან
               </p>
             </div>
           </div>

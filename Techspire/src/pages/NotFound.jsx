@@ -30,7 +30,7 @@ const NotFound = () => {
             to="/shop"
             className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-gray-200 bg-white px-8 py-4 text-sm font-semibold text-black transition-all hover:bg-gray-50"
           >
-            <ShoppingBag className="h-4 w-4" /> Back to Shop
+            <ShoppingBag className="h-4 w-4" /> მაღაზიაში დაბრუნება
           </Link>
         </div>
       </div>

@@ -7,7 +7,8 @@ import {
   getProductBySlug,
   createProduct, 
   updateProduct, 
-  deleteProduct 
+  deleteProduct,
+  getBrands
 } from '../controllers/ProductController.js';
 
 // Import the standardized auth middleware
