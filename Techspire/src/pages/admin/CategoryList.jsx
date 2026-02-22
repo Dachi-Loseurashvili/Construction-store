@@ -117,19 +117,19 @@ const CategoryList = () => {
           to="/admin/products"
           className="inline-flex items-center text-sm text-gray-500 hover:text-black mb-6"
         >
-          <ChevronLeft className="mr-1 h-4 w-4" /> Back to Products
+          <ChevronLeft className="mr-1 h-4 w-4" /> პროდუქტებში დაბრუნება
         </Link>
 
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <FolderTree className="h-8 w-8" />
-            <h1 className="text-3xl font-bold">Categories</h1>
+            <h1 className="text-3xl font-bold">კატეგორიები</h1>
           </div>
           <button
             onClick={handleCreate}
             className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-800"
           >
-            <Plus className="h-4 w-4" /> Add Category
+            <Plus className="h-4 w-4" /> კატეგორიის დამატება
           </button>
         </div>
 
@@ -149,11 +149,11 @@ const CategoryList = () => {
         {showForm && (
           <div className="mb-6 bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-lg font-semibold mb-4">
-              {formMode === 'create' ? 'New Category' : 'Edit Category'}
+              {formMode === 'create' ? 'ახალი კატეგორია' : 'კატეგორიის რედაქტირება'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">სახელი</label>
                 <input
                   type="text"
                   value={formData.name}
@@ -166,14 +166,14 @@ const CategoryList = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Parent Category (leave empty for main category)
+                  მშობელი კატეგორია (თუ მშობელი კატეგორიაა, ცარიელი დატოვეთ)
                 </label>
                 <select
                   value={formData.parentId}
                   onChange={(e) => setFormData({ ...formData, parentId: e.target.value })}
                   className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
                 >
-                  <option value="">— Main Category (no parent) —</option>
+                  <option value="">— მშობელი კატეგორია (მშობელი - არა) —</option>
                   {mainCategories.map((cat) => (
                     <option key={cat._id} value={cat._id}>
                       {cat.name}
@@ -189,14 +189,14 @@ const CategoryList = () => {
                   className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-800 disabled:bg-gray-400"
                 >
                   {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-                  {formMode === 'create' ? 'Create' : 'Save'}
+                  {formMode === 'create' ? 'დამატება' : 'დამახსოვრება'}
                 </button>
                 <button
                   type="button"
                   onClick={handleCancel}
                   className="flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-200"
                 >
-                  <X className="h-4 w-4" /> Cancel
+                  <X className="h-4 w-4" /> გაუქმება
                 </button>
               </div>
             </form>
@@ -207,7 +207,7 @@ const CategoryList = () => {
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           {categories.length === 0 ? (
             <div className="p-8 text-center text-gray-500">
-              No categories yet. Create one to get started.
+              კატეგორიები არ არის. დაიწყეთ დამატება.
             </div>
           ) : (
             <div className="divide-y divide-gray-100">

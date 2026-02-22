@@ -69,7 +69,7 @@ const Navbar = () => {
             
             {/* Logo */}
             <Link to="/" className="text-2xl font-black tracking-tighter text-black italic">
-              Housestrong
+              House strong
             </Link>
 
             {/* Desktop Navigation */}
@@ -156,13 +156,13 @@ const Navbar = () => {
               <>
                 <Link to="/profile" onClick={closeMenu} className="flex items-center justify-between px-3 py-4 text-sm font-bold text-black border-b border-gray-50">
                   <div className="flex items-center uppercase tracking-tight">
-                    <User className="mr-2 h-5 w-5 text-gray-400" /> Hello, {user.fullName.split(' ')[0]}
+                    <User className="mr-2 h-5 w-5 text-gray-400" /> მოგესალმებით, {user.fullName.split(' ')[0]}
                   </div>
                 </Link>
               </>
             )}
-            <Link to="/shop" onClick={closeMenu} className="block px-3 py-3 text-base font-bold text-gray-700 hover:bg-gray-50 uppercase">Shop</Link>
-            <Link to="/support" onClick={closeMenu} className="block px-3 py-3 text-base font-bold text-gray-700 hover:bg-gray-50 uppercase">Support</Link>
+            <Link to="/shop" onClick={closeMenu} className="block px-3 py-3 text-base font-bold text-gray-700 hover:bg-gray-50 uppercase">მაღაზია</Link>
+            <Link to="/support" onClick={closeMenu} className="block px-3 py-3 text-base font-bold text-gray-700 hover:bg-gray-50 uppercase">ინფორმაცია</Link>
           </div>
         )}
       </nav>
