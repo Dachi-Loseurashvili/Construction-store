@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, Loader2 } from 'lucide-react';
 import API from '../api/axios';
 import PurchaseCTA from '../components/PurchaseCTA';
-
+import { cdnImage } from "../utils/cdnImage";
 const ProductDetail = () => {
   const { slug } = useParams();
   const [product, setProduct] = useState(null);
@@ -50,7 +50,7 @@ const ProductDetail = () => {
           {/* Product Image: Responsive height/aspect ratio */}
           <div className="overflow-hidden rounded-2xl sm:rounded-3xl bg-gray-50 border border-gray-100 aspect-square w-full">
             <img 
-              src={product.image} 
+              src={cdnImage(product.image, "w_1200,c_limit,f_auto,q_auto")}
               alt={product.name} 
               className="h-full w-full object-cover" 
             />

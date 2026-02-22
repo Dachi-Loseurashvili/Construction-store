@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { ArrowRight, Loader2, ChevronDown, ChevronRight, Filter, X } from 'lucide-react';
 import API from '../api/axios';
+import { cdnImage } from "../utils/cdnImage";
 
 const LIMIT = 20;
 
@@ -392,13 +393,13 @@ const Shop = () => {
                         className="relative aspect-square overflow-hidden rounded-xl bg-gray-100 border border-gray-100"
                       >
                         <img 
-                          src={product.image} 
+                          src={cdnImage(product.image, "w_600,c_limit,f_auto,q_auto")} 
                           alt={product.name} 
                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" 
                         />
                         {product.stock === 0 && (
                           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                            <span className="text-white text-xs font-bold">Out of Stock</span>
+                            <span className="text-white text-xs font-bold">მარაგში აღარაა</span>
                           </div>
                         )}
                         <div className="absolute bottom-2 right-2 translate-y-2 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
@@ -432,18 +433,18 @@ const Shop = () => {
                       {isLoadingMore ? (
                         <Loader2 className="h-4 w-4 animate-spin inline mr-2" />
                       ) : null}
-                      Load More
+                      მეტის ჩვენება
                     </button>
                   </div>
                 )}
               </>
             ) : (
               <div className="py-24 text-center">
-                <h3 className="text-lg font-medium text-gray-900">No products found</h3>
-                <p className="mt-2 text-sm text-gray-500">Try adjusting your filters</p>
+                <h3 className="text-lg font-medium text-gray-900">პროდუქტი ვერ მოიძებნა</h3>
+                <p className="mt-2 text-sm text-gray-500">სცადეთ სხვა ფილტრებით</p>
                 {hasActiveFilters && (
                   <button onClick={clearAllFilters} className="mt-4 text-sm font-bold underline">
-                    Clear all filters
+                    ფილტრების გასუფთავება
                   </button>
                 )}
               </div>

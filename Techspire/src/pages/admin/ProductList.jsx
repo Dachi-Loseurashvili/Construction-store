@@ -58,12 +58,12 @@ const ProductList = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-6xl px-4 py-8">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold">Products</h1>
+          <h1 className="text-3xl font-bold">პროდუქტები</h1>
           <Link
             to="/admin/products/new"
             className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full font-medium hover:bg-gray-800 transition-colors"
           >
-            <Plus className="h-4 w-4" /> Add Product
+            <Plus className="h-4 w-4" /> პროდუქტის დამატება
           </Link>
         </div>
 
@@ -79,18 +79,18 @@ const ProductList = () => {
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
-            No products yet. Create your first one!
+            ჯერ პროდუქტები არ გაქვთ. დაამატეთ პირველი!
           </div>
         ) : (
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <table className="w-full">
               <thead className="bg-gray-50 border-b">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-bold uppercase text-gray-500">Product</th>
-                  <th className="text-left px-4 py-3 text-xs font-bold uppercase text-gray-500">Category</th>
-                  <th className="text-left px-4 py-3 text-xs font-bold uppercase text-gray-500">Price</th>
-                  <th className="text-left px-4 py-3 text-xs font-bold uppercase text-gray-500">Stock</th>
-                  <th className="text-right px-4 py-3 text-xs font-bold uppercase text-gray-500">Actions</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase text-gray-500">პროდუქტი</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase text-gray-500">კატეგორია</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase text-gray-500">ფასი</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase text-gray-500">რაოდენობა</th>
+                  <th className="text-right px-4 py-3 text-xs font-bold uppercase text-gray-500">მოქმედება</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
