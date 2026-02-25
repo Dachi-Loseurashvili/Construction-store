@@ -1,6 +1,6 @@
-const User = require('../models/User');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+import User from '../models/User.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 // Helper function to generate the formatted token
 const generateBearerToken = (user) => {
@@ -13,7 +13,7 @@ const generateBearerToken = (user) => {
 };
 
 // REGISTER - Now logs the user in automatically
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
   try {
     const { fullName, email, password, phoneNumber } = req.body;
 
@@ -37,7 +37,7 @@ exports.register = async (req, res) => {
 };
 
 // LOGIN
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
