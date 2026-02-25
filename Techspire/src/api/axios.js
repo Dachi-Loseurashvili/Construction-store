@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API = axios.create({
-  baseURL: '', // Empty for Vite proxy (relative URLs)
-  withCredentials: true, // Required for cookie handling
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
 });
 
 export default API;
