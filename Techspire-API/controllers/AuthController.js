@@ -2,13 +2,15 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const isProd = process.env.NODE_ENV === "production";
+
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax',
-  maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  secure: isProd,                  // true on Render
+  sameSite: isProd ? "none" : "lax",
+  maxAge: 24 * 60 * 60 * 1000,     // 24 hours
+  path: "/",
 };
-
 const generateToken = (user) => {
   return jwt.sign(
     { id: user._id, role: user.role },
