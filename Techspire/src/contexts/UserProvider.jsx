@@ -22,6 +22,15 @@ export const UserProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const response = await API.post('/api/auth/login', { email, password });
+    const token = response.data.token;
+    // Temporary diagnostic - remove after confirming auth works
+    console.log('[LOGIN] token received:', token ? 'YES' : 'NO', token ? token.substring(0, 20) + '...' : '');
+    if (token) {
+      localStorage.setItem("token", token);
+      console.log('[LOGIN] token stored in localStorage:', !!localStorage.getItem("token"));
+    } else {
+      console.warn('[LOGIN] No token in response!', response.data);
+    }
     setUser(response.data.user);
     return response.data;
   };

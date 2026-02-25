@@ -1,6 +1,6 @@
-const User = require('../models/User');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+import User from '../models/User.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -19,7 +19,7 @@ const generateToken = (user) => {
   );
 };
 
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     
@@ -39,8 +39,9 @@ exports.login = async (req, res) => {
 
     const token = generateToken(user);
     
-    res.cookie('token', token, COOKIE_OPTIONS);
+    res.cookie("token", token, COOKIE_OPTIONS);
     res.json({
+      token, // ADD THIS
       user: {
         id: user._id,
         fullName: user.fullName,
@@ -53,7 +54,7 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.logout = async (req, res) => {
+export const logout = async (req, res) => {
   res.clearCookie('token', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -62,7 +63,7 @@ exports.logout = async (req, res) => {
   res.json({ message: 'Logged out' });
 };
 
-exports.me = async (req, res) => {
+export const me = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: 'Not authenticated' });
   }
