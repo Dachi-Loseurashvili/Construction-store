@@ -6,9 +6,9 @@ const isProd = process.env.NODE_ENV === "production";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: isProd,                  // true on Render
-  sameSite: isProd ? "none" : "lax",
-  maxAge: 24 * 60 * 60 * 1000,     // 24 hours
+  secure: isProd,
+  sameSite: isProd ? false : "lax",
+  maxAge: 24 * 60 * 60 * 1000,
   path: "/",
 };
 const generateToken = (user) => {
